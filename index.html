@@ -109,6 +109,11 @@
     width:100%;background:var(--ember);border:1px solid var(--line);color:var(--cream);
     border-radius:8px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500;
   }
+  select{
+    width:100%;background:var(--ember);border:1px solid var(--line);color:var(--cream);
+    border-radius:8px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:500;
+    appearance:none;-webkit-appearance:none;
+  }
   .comensales-row{display:flex;align-items:center;gap:10px;}
   .stepper{
     width:38px;height:38px;flex:none;border-radius:8px;border:1px solid var(--line);
@@ -223,6 +228,30 @@
         </div>
         <p class="hint">Nacarar (sellar el grano en el sofrito 1–2 min) reduce ligeramente la absorción posterior: se resta al caldo para mantener el grano suelto.</p>
       </div>
+
+      <div class="field">
+        <label>Dónde cocinas</label>
+        <div class="toggle-row">
+          <button class="active" data-entorno="interior">Interior</button>
+          <button data-entorno="exterior">Exterior</button>
+        </div>
+        <p class="hint">En exterior el viento enfría la paellera y acelera la evaporación: se compensa con algo más de caldo.</p>
+      </div>
+
+      <div class="field" id="tempField" style="display:none;">
+        <label>Temperatura ambiente <span class="val" id="tempVal">20 °C</span></label>
+        <input type="range" id="tempAmbiente" min="0" max="40" step="1" value="20">
+        <p class="hint">Días fríos enfrían más la paellera al aire libre; días calurosos, menos.</p>
+      </div>
+
+      <div class="field">
+        <label>Ciudad <span style="font-weight:400;color:var(--muted);">(altitud → presión atmosférica)</span></label>
+        <select id="ciudad"></select>
+        <div id="altitudManualWrap" style="display:none;margin-top:10px;">
+          <input type="number" id="altitudManual" min="0" max="5000" step="10" value="500" placeholder="Altitud en metros">
+        </div>
+        <p class="hint" id="presionHint"></p>
+      </div>
     </div>
 
     <!-- INPUTS + RESULTS -->
@@ -279,10 +308,12 @@
           <div class="row"><span>Ajuste nº de aros</span><code id="fAros">×1.00</code></div>
           <div class="row"><span>Ajuste potencia</span><code id="fPot">×1.00</code></div>
           <div class="row"><span>Ajuste grosor de capa</span><code id="fGrosor">×1.00</code></div>
+          <div class="row"><span>Ajuste entorno (interior/exterior + temp.)</span><code id="fEntorno">×1.00</code></div>
+          <div class="row"><span>Ajuste altitud/presión</span><code id="fAltitud">×1.00</code></div>
           <div class="row"><span>Ratio final</span><code id="fFinal">3.00 : 1</code></div>
           <p style="margin-top:12px;">
             El arroz sale directo de comensales × g/ración — no depende de la paellera. La paellera decide qué tan gruesa queda esa cantidad repartida (por eso el corte lateral de abajo), y ese grosor realimenta ligeramente el caldo: una capa más gruesa necesita algo más de líquido para hidratarse de forma uniforme, una capa fina algo menos.
-            La base útil de cocción suele ser ~8&nbsp;cm menor que el diámetro de boca por la pared inclinada. Más aros y más potencia reparten más calor y aceleran el hervor, así que se compensa con algo más de caldo. Coeficientes orientativos — ajústalos a tu paellero real con un par de pruebas.
+            La base útil de cocción suele ser ~8&nbsp;cm menor que el diámetro de boca por la pared inclinada. Más aros y más potencia reparten más calor y aceleran el hervor, así que se compensa con algo más de caldo. Cocinar en exterior añade pérdida de calor por viento (más marcada cuanto más fría la temperatura ambiente). La altitud de la ciudad elegida baja la presión atmosférica y con ella el punto de ebullición del agua: a menor temperatura de hervor, la cocción es más lenta y conviene algo más de caldo de reserva. Coeficientes orientativos — ajústalos a tu paellero real con un par de pruebas.
           </p>
         </div>
       </details>
@@ -360,7 +391,26 @@
     radio: 21,
     aros: 3,
     potencia: 15,
-    sofrito: true
+    sofrito: true,
+    entorno: 'interior',
+    tempAmbiente: 20,
+    ciudad: 'Madrid',
+    altitudManual: 500
+  };
+
+  const CIUDADES = {
+    'A Coruña': 4, 'Albacete': 686, 'Alicante': 3, 'Almería': 8, 'Ávila': 1131,
+    'Badajoz': 186, 'Barcelona': 12, 'Bilbao': 19, 'Burgos': 861, 'Cáceres': 439,
+    'Cádiz': 3, 'Castellón de la Plana': 28, 'Ciudad Real': 628, 'Córdoba': 106,
+    'Cuenca': 956, 'Girona': 76, 'Granada': 738, 'Guadalajara': 685,
+    'Huelva': 4, 'Huesca': 466, 'Jaén': 573, 'Las Palmas de Gran Canaria': 6,
+    'León': 837, 'Lleida': 151, 'Logroño': 384, 'Lugo': 465, 'Madrid': 667,
+    'Málaga': 11, 'Murcia': 43, 'Ourense': 132, 'Oviedo': 232, 'Palencia': 724,
+    'Palma de Mallorca': 13, 'Pamplona': 449, 'Pontevedra': 20, 'Salamanca': 776,
+    'San Sebastián': 6, 'Santa Cruz de Tenerife': 18, 'Santander': 15,
+    'Segovia': 1005, 'Sevilla': 7, 'Soria': 1063, 'Tarragona': 60, 'Teruel': 915,
+    'Toledo': 529, 'Valencia': 15, 'Valladolid': 692, 'Vitoria-Gasteiz': 525,
+    'Zamora': 656, 'Zaragoza': 199, 'Ceuta': 20, 'Melilla': 60
   };
 
   const AROS_RANGO = {
@@ -387,6 +437,33 @@
 
   function factorGrosor(grosorCm){
     return clamp(1 + (grosorCm - 0.6) * 0.08, 0.90, 1.10);
+  }
+
+  function factorEntorno(entorno, tempC){
+    if (entorno !== 'exterior') return 1.00;
+    return clamp(1.05 + (20 - tempC) * 0.003, 0.95, 1.15);
+  }
+
+  function getAltitud(){
+    return state.ciudad === 'manual' ? state.altitudManual : CIUDADES[state.ciudad];
+  }
+
+  function presionYEbullicion(alturaM){
+    const presionHpa = 1013.25 * Math.pow(1 - 2.25577e-5 * alturaM, 5.25588);
+    const ebullicionC = 100 - 0.031 * (1013.25 - presionHpa);
+    return { presionHpa, ebullicionC };
+  }
+
+  function factorAltitud(ebullicionC){
+    return clamp(1 + Math.max(0, 100 - ebullicionC) * 0.02, 1.00, 1.20);
+  }
+
+  function poblarCiudades(){
+    const sel = $('ciudad');
+    const nombres = Object.keys(CIUDADES).sort((a,b)=> a.localeCompare(b, 'es'));
+    sel.innerHTML = nombres.map(n => `<option value="${n}">${n} (${CIUDADES[n]} m)</option>`).join('')
+      + `<option value="manual">Otra ciudad (altitud manual)</option>`;
+    sel.value = state.ciudad;
   }
 
   // ---- pan cross-section geometry (fixed drawing constants) ----
@@ -504,7 +581,11 @@
     const fAros = factorAros(state.aros);
     const fPot = factorPotencia(state.potencia, state.aros);
     const fGrosor = factorGrosor(grosorCm);
-    const ratioFinal = (BROTH_ML_PER_100G_BASE/100) * fSofrito * fAros * fPot * fGrosor;
+    const fEntorno = factorEntorno(state.entorno, state.tempAmbiente);
+    const altura = getAltitud();
+    const { presionHpa, ebullicionC } = presionYEbullicion(altura);
+    const fAltitud = factorAltitud(ebullicionC);
+    const ratioFinal = (BROTH_ML_PER_100G_BASE/100) * fSofrito * fAros * fPot * fGrosor * fEntorno * fAltitud;
 
     const caldoL = (arrozG * ratioFinal) / 1000;
 
@@ -528,7 +609,12 @@
     $('fAros').textContent = '×' + fAros.toFixed(2);
     $('fPot').textContent = '×' + fPot.toFixed(2);
     $('fGrosor').textContent = '×' + fGrosor.toFixed(2);
+    $('fEntorno').textContent = '×' + fEntorno.toFixed(2);
+    $('fAltitud').textContent = '×' + fAltitud.toFixed(2);
     $('fFinal').textContent = '1 : ' + ratioFinal.toFixed(2);
+
+    $('tempVal').textContent = state.tempAmbiente + ' °C';
+    $('presionHint').textContent = `Altitud: ${altura.toFixed(0)} m · presión estimada ${presionHpa.toFixed(0)} hPa · agua hierve a ~${ebullicionC.toFixed(1)} °C (estimación orientativa)`;
 
     // ---- cross-section fill ----
     const fillPx = clamp(grosorCm * PAN.pxPerCm, 2, PAN.maxFillPx);
@@ -612,6 +698,29 @@
     });
   });
 
+  document.querySelectorAll('[data-entorno]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.entorno = btn.dataset.entorno;
+      document.querySelectorAll('[data-entorno]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      $('tempField').style.display = state.entorno === 'exterior' ? 'block' : 'none';
+      render();
+    });
+  });
+
+  $('tempAmbiente').addEventListener('input', e => { state.tempAmbiente = parseFloat(e.target.value); render(); });
+
+  $('ciudad').addEventListener('change', e => {
+    state.ciudad = e.target.value;
+    $('altitudManualWrap').style.display = state.ciudad === 'manual' ? 'block' : 'none';
+    render();
+  });
+
+  $('altitudManual').addEventListener('input', e => {
+    state.altitudManual = clamp(parseFloat(e.target.value) || 0, 0, 5000);
+    render();
+  });
+
   window.addEventListener('resize', render);
 
   ['ring1','ring2','ring3'].forEach(id=> $(id).classList.add('on'));
@@ -619,6 +728,7 @@
 
   buildStaticPan();
   buildRuler();
+  poblarCiudades();
   render();
 })();
 </script>
