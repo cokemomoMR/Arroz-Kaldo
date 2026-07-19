@@ -158,14 +158,26 @@
   .formula-body .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted var(--line);gap:16px;}
 
   /* cross-section card */
-  .cross-wrap{display:flex;gap:18px;align-items:stretch;}
-  .cross-svg-holder{flex:1;min-width:0;}
-  .cross-readout{
-    flex:none;width:150px;display:flex;flex-direction:column;justify-content:center;gap:14px;
+  .cross-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .cross-panel{
+    border:1px solid var(--line);border-radius:12px;padding:12px 12px 14px;
+    background:rgba(0,0,0,.12);transition:border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    position:relative;
   }
-  .grosor-num{font-family:'Fraunces',serif;font-weight:600;font-size:30px;color:var(--saffron);line-height:1;}
+  .cross-panel.active{
+    border-color:var(--saffron);background:rgba(232,162,61,.07);
+    box-shadow:0 0 0 1px var(--saffron), 0 0 22px rgba(232,162,61,.25);
+  }
+  .cross-panel-badge{
+    position:absolute;top:-10px;right:10px;background:var(--paprika);color:var(--cream);
+    font-family:'IBM Plex Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;
+    padding:3px 8px;border-radius:20px;display:none;
+  }
+  .cross-panel.active .cross-panel-badge{display:block;}
+  .cross-panel-label{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+  .cross-panel-cm{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--cream);}
   .grosor-tag{
-    display:inline-block;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+    display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:11px;
     text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;border-radius:20px;
     border:1px solid var(--line);color:var(--muted);
   }
@@ -173,8 +185,7 @@
   .grosor-tag.media{border-color:var(--saffron);color:var(--saffron);}
   .grosor-tag.gruesa{border-color:var(--paprika);color:#e88b62;}
   @media (max-width:600px){
-    .cross-wrap{flex-direction:column;}
-    .cross-readout{width:auto;flex-direction:row;align-items:center;justify-content:space-between;}
+    .cross-grid{grid-template-columns:1fr;}
   }
 
   footer{margin-top:28px;text-align:center;color:var(--muted);font-size:11.5px;font-family:'IBM Plex Mono',monospace;}
@@ -322,59 +333,34 @@
 
   <!-- CROSS SECTION -->
   <div class="card">
-    <h2>Corte lateral de la paellera <span style="font-weight:400;">grosor real de la capa</span></h2>
-    <div class="cross-wrap">
-      <div class="cross-svg-holder">
-        <svg id="crossSvg" viewBox="0 0 560 260" width="100%" style="display:block;">
-          <defs>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#e8a23d" stop-opacity="0.55"/>
-              <stop offset="100%" stop-color="#e8a23d" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#8b8f92"/>
-              <stop offset="45%" stop-color="#55575a"/>
-              <stop offset="100%" stop-color="#2b2c2e"/>
-            </linearGradient>
-            <linearGradient id="riceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#f1cf85"/>
-              <stop offset="55%" stop-color="#e0aa54"/>
-              <stop offset="85%" stop-color="#c4813a"/>
-              <stop offset="100%" stop-color="#8a4a1e"/>
-            </linearGradient>
-            <clipPath id="panClip">
-              <path id="panClipPath" d=""/>
-            </clipPath>
-          </defs>
-
-          <ellipse cx="280" cy="230" rx="150" ry="16" fill="url(#glow)"/>
-
-          <!-- outer metal body -->
-          <path id="panOuter" fill="url(#steel)" d=""/>
-          <!-- inner cavity (dark, visible where rice doesn't reach) -->
-          <path id="panInner" fill="#1a1512" d=""/>
-
-          <!-- rice fill, clipped to cavity shape -->
-          <g clip-path="url(#panClip)">
-            <rect id="riceRect" x="0" width="560" fill="url(#riceGrad)" y="260" height="0"/>
-            <g id="garnish"></g>
-          </g>
-
-          <!-- rim highlight -->
-          <path id="panRimHi" fill="none" stroke="#c9ccce" stroke-width="2" stroke-linecap="round" opacity="0.5" d=""/>
-
-          <!-- ruler -->
-          <g id="ruler" font-family="IBM Plex Mono, monospace" font-size="10" fill="#9a8d78"></g>
-        </svg>
-      </div>
-      <div class="cross-readout">
-        <div>
-          <div class="grosor-num" id="grosorNum">0.0 cm</div>
-          <span class="grosor-tag" id="grosorTag">–</span>
+    <h2>Corte lateral de la paellera <span style="font-weight:400;">3 grosores de capa, para comparar</span></h2>
+    <div class="cross-grid" id="crossGrid">
+      <div class="cross-panel" data-nivel="fina">
+        <span class="cross-panel-badge">tu caso</span>
+        <svg id="crossSvg-fina" viewBox="0 0 560 260" width="100%" style="display:block;"></svg>
+        <div class="cross-panel-label">
+          <span class="grosor-tag fina">Fina</span>
+          <span class="cross-panel-cm" id="cmFina">0.40 cm</span>
         </div>
-        <p class="hint" id="grosorHint" style="margin-top:0;"></p>
+      </div>
+      <div class="cross-panel" data-nivel="media">
+        <span class="cross-panel-badge">tu caso</span>
+        <svg id="crossSvg-media" viewBox="0 0 560 260" width="100%" style="display:block;"></svg>
+        <div class="cross-panel-label">
+          <span class="grosor-tag media">Media</span>
+          <span class="cross-panel-cm" id="cmMedia">0.65 cm</span>
+        </div>
+      </div>
+      <div class="cross-panel" data-nivel="gruesa">
+        <span class="cross-panel-badge">tu caso</span>
+        <svg id="crossSvg-gruesa" viewBox="0 0 560 260" width="100%" style="display:block;"></svg>
+        <div class="cross-panel-label">
+          <span class="grosor-tag gruesa">Gruesa</span>
+          <span class="cross-panel-cm" id="cmGruesa">0.95 cm</span>
+        </div>
       </div>
     </div>
+    <p class="hint" id="crossHint" style="margin-top:14px;"></p>
   </div>
 
   <footer>hecho para no quedarte corto de caldo — ni ahogar el socarrat</footer>
@@ -383,7 +369,6 @@
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const svgNS = 'http://www.w3.org/2000/svg';
 
   const state = {
     comensales: 6,
@@ -501,36 +486,68 @@
             M ${PAN.railR+14} ${PAN.topY-6} L ${PAN.railR-2} ${PAN.topY+2}`;
   }
 
-  function buildStaticPan(){
-    $('panClipPath').setAttribute('d', cavityPath());
-    $('panOuter').setAttribute('d', outerPath());
-    $('panInner').setAttribute('d', cavityPath());
-    $('panRimHi').setAttribute('d', rimHiPath());
+  const LEVELS = [
+    { key:'fina', cm:0.40 },
+    { key:'media', cm:0.65 },
+    { key:'gruesa', cm:0.95 }
+  ];
+
+  function panelSvgMarkup(suf){
+    return `
+      <defs>
+        <radialGradient id="glow-${suf}" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#e8a23d" stop-opacity="0.55"/>
+          <stop offset="100%" stop-color="#e8a23d" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="steel-${suf}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8b8f92"/>
+          <stop offset="45%" stop-color="#55575a"/>
+          <stop offset="100%" stop-color="#2b2c2e"/>
+        </linearGradient>
+        <linearGradient id="riceGrad-${suf}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f1cf85"/>
+          <stop offset="55%" stop-color="#e0aa54"/>
+          <stop offset="85%" stop-color="#c4813a"/>
+          <stop offset="100%" stop-color="#8a4a1e"/>
+        </linearGradient>
+        <pattern id="grain-${suf}" width="16" height="13" patternUnits="userSpaceOnUse" patternTransform="rotate(11)">
+          <ellipse cx="3" cy="2.5" rx="2.3" ry="1.1" fill="#fff3d6" opacity="0.22" transform="rotate(-12 3 2.5)"/>
+          <ellipse cx="11" cy="8" rx="2.3" ry="1.1" fill="#6d3818" opacity="0.20" transform="rotate(18 11 8)"/>
+          <ellipse cx="6.5" cy="10.5" rx="2" ry="1" fill="#fff3d6" opacity="0.16" transform="rotate(5 6.5 10.5)"/>
+        </pattern>
+        <clipPath id="panClip-${suf}">
+          <path d="${cavityPath()}"/>
+        </clipPath>
+      </defs>
+      <ellipse cx="280" cy="230" rx="150" ry="16" fill="url(#glow-${suf})"/>
+      <path fill="url(#steel-${suf})" d="${outerPath()}"/>
+      <path fill="#1a1512" d="${cavityPath()}"/>
+      <g clip-path="url(#panClip-${suf})">
+        <rect id="riceRect-${suf}" x="0" width="560" fill="url(#riceGrad-${suf})" y="260" height="0"/>
+        <rect id="riceGrain-${suf}" x="0" width="560" fill="url(#grain-${suf})" y="260" height="0"/>
+        <g id="garnish-${suf}"></g>
+      </g>
+      <path fill="none" stroke="#c9ccce" stroke-width="2" stroke-linecap="round" opacity="0.5" d="${rimHiPath()}"/>
+    `;
   }
 
-  function buildRuler(){
-    const g = $('ruler');
-    g.innerHTML = '';
-    const rulerX = PAN.railR + 46;
-    const baseY = PAN.floorY;
-    const marks = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5];
-    marks.forEach(cm=>{
-      const y = baseY - cm*PAN.pxPerCm;
-      const line = document.createElementNS(svgNS,'line');
-      line.setAttribute('x1', rulerX); line.setAttribute('x2', rulerX+8);
-      line.setAttribute('y1', y); line.setAttribute('y2', y);
-      line.setAttribute('stroke', '#5a4c38'); line.setAttribute('stroke-width', 1.5);
-      g.appendChild(line);
-      const txt = document.createElementNS(svgNS,'text');
-      txt.setAttribute('x', rulerX+13); txt.setAttribute('y', y+3.5);
-      txt.textContent = cm.toFixed(2).replace(/0$/,'').replace(/\.$/,'') + (cm===0?' cm':'');
-      g.appendChild(txt);
+  function fillPanel(suf, cm){
+    const fillPx = clamp(cm * PAN.pxPerCm, 2, PAN.maxFillPx);
+    const fillTopY = PAN.floorY - fillPx;
+    const rect = $('riceRect-'+suf);
+    rect.setAttribute('y', fillTopY);
+    rect.setAttribute('height', 260 - fillTopY);
+    const grain = $('riceGrain-'+suf);
+    grain.setAttribute('y', fillTopY);
+    grain.setAttribute('height', 260 - fillTopY);
+    updateGarnish(fillTopY, $('garnish-'+suf));
+  }
+
+  function buildCrossPanels(){
+    LEVELS.forEach(level=>{
+      $('crossSvg-'+level.key).innerHTML = panelSvgMarkup(level.key);
+      fillPanel(level.key, level.cm);
     });
-    const axis = document.createElementNS(svgNS,'line');
-    axis.setAttribute('x1', rulerX); axis.setAttribute('x2', rulerX);
-    axis.setAttribute('y1', baseY); axis.setAttribute('y2', baseY - 1.5*PAN.pxPerCm);
-    axis.setAttribute('stroke', '#5a4c38'); axis.setAttribute('stroke-width', 1.5);
-    g.appendChild(axis);
   }
 
   const GARNISH_SPECS = [
@@ -556,8 +573,7 @@
     </g>`;
   }
 
-  function updateGarnish(fillTopY){
-    const g = $('garnish');
+  function updateGarnish(fillTopY, g){
     let html = '';
     GARNISH_SPECS.forEach(spec=>{
       const surfaceY = PAN.floorY - spec.minCm*PAN.pxPerCm;
@@ -616,22 +632,14 @@
     $('tempVal').textContent = state.tempAmbiente + ' °C';
     $('presionHint').textContent = `Altitud: ${altura.toFixed(0)} m · presión estimada ${presionHpa.toFixed(0)} hPa · agua hierve a ~${ebullicionC.toFixed(1)} °C (estimación orientativa)`;
 
-    // ---- cross-section fill ----
-    const fillPx = clamp(grosorCm * PAN.pxPerCm, 2, PAN.maxFillPx);
-    const fillTopY = PAN.floorY - fillPx;
-    const rect = $('riceRect');
-    rect.setAttribute('y', fillTopY);
-    rect.setAttribute('height', 260 - fillTopY);
-    updateGarnish(fillTopY);
-
-    $('grosorNum').textContent = grosorCm.toFixed(2) + ' cm';
-    let tag = 'fina', tagClass='fina', tagHint='Capa fina: cocción muy pareja, algo de margen en la paellera.';
-    if (grosorCm > 0.85){ tag='gruesa'; tagClass='gruesa'; tagHint='Capa gruesa: riesgo de que el centro quede con más caldo del debido mientras los bordes se pasan.'; }
-    else if (grosorCm > 0.5){ tag='media'; tagClass='media'; tagHint='Capa media: el punto habitual en casa, buen equilibrio.'; }
-    const tagEl = $('grosorTag');
-    tagEl.textContent = tag;
-    tagEl.className = 'grosor-tag ' + tagClass;
-    $('grosorHint').textContent = tagHint;
+    // ---- cross-section comparison (3 fixed reference panels, highlight current case) ----
+    let tag = 'fina', tagHint='Capa fina: cocción muy pareja, algo de margen en la paellera.';
+    if (grosorCm > 0.85){ tag='gruesa'; tagHint='Capa gruesa: riesgo de que el centro quede con más caldo del debido mientras los bordes se pasan.'; }
+    else if (grosorCm > 0.5){ tag='media'; tagHint='Capa media: el punto habitual en casa, buen equilibrio.'; }
+    document.querySelectorAll('.cross-panel').forEach(p=>{
+      p.classList.toggle('active', p.dataset.nivel === tag);
+    });
+    $('crossHint').innerHTML = `Con tu configuración actual, la capa te sale de <b>${grosorCm.toFixed(2)}&nbsp;cm</b> → ${tagHint}`;
 
     // pan overlay sizing (burner card)
     const stage = $('stage');
@@ -726,8 +734,7 @@
   ['ring1','ring2','ring3'].forEach(id=> $(id).classList.add('on'));
   ['flame1','flame2','flame3'].forEach(id=> $(id).classList.add('on'));
 
-  buildStaticPan();
-  buildRuler();
+  buildCrossPanels();
   poblarCiudades();
   render();
 })();
