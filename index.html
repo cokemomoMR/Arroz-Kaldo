@@ -30,7 +30,7 @@
     min-height:100vh;
     padding:32px 18px 80px;
   }
-  .wrap{max-width:960px;margin:0 auto;}
+  .wrap{max-width:720px;margin:0 auto;}
 
   header{margin-bottom:36px;}
   .eyebrow{
@@ -47,9 +47,6 @@
   h1 em{font-style:italic;font-weight:400;color:var(--saffron);}
   .sub{color:var(--muted);font-size:15px;max-width:600px;line-height:1.5;}
 
-  .grid{display:grid;grid-template-columns:1.05fr 1fr;gap:22px;}
-  @media (max-width:820px){ .grid{grid-template-columns:1fr;} }
-
   .card{
     background:linear-gradient(180deg,var(--panel),var(--panel-2));
     border:1px solid var(--line);border-radius:14px;padding:24px;
@@ -63,7 +60,7 @@
 
   /* burner visual */
   .burner-stage{
-    position:relative;width:100%;aspect-ratio:1/1;max-width:340px;
+    position:relative;width:100%;aspect-ratio:1/1;max-width:280px;
     margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
   }
   .ring{position:absolute;border-radius:50%;border:2px solid var(--line);transition:all .25s ease;}
@@ -94,10 +91,8 @@
   .aro-btn.active{border-color:var(--paprika);color:var(--cream);background:rgba(193,68,14,.18);}
   .aro-btn:hover{color:var(--cream);}
 
-  .field{margin-bottom:20px;}
-  .field:last-child{margin-bottom:0;}
   label{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--cream);margin-bottom:8px;}
-  label .val{font-family:'IBM Plex Mono',monospace;color:var(--saffron);font-size:13px;}
+  .val{font-family:'IBM Plex Mono',monospace;color:var(--saffron);font-size:13px;}
   .hint{font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.45;}
 
   input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--line);border-radius:4px;outline:none;}
@@ -124,7 +119,7 @@
   .toggle-row{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;}
   .toggle-row button{
     flex:1;background:var(--panel);color:var(--muted);border:none;padding:11px 6px;
-    font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s ease;
+    font-size:12.5px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s ease;
   }
   .toggle-row button.active{background:rgba(193,68,14,.18);color:var(--cream);}
   .toggle-row button:not(:last-child){border-right:1px solid var(--line);}
@@ -157,24 +152,82 @@
   .formula-body code{color:var(--saffron);background:rgba(232,162,61,.08);padding:1px 5px;border-radius:4px;font-family:'IBM Plex Mono',monospace;}
   .formula-body .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted var(--line);gap:16px;}
 
-  /* cross-section card */
-  .cross-wrap{display:flex;gap:18px;align-items:stretch;}
-  .cross-svg-holder{flex:1;min-width:0;}
-  .cross-readout{
-    flex:none;width:150px;display:flex;flex-direction:column;justify-content:center;gap:14px;
+  /* thickness gauge (graphic, non-realistic) */
+  .gauge-wrap{margin-top:6px;}
+  .gauge-track{position:relative;height:14px;border-radius:7px;display:flex;overflow:hidden;border:1px solid var(--line);}
+  .gauge-zone{height:100%;}
+  .gauge-zone.fina{width:38%;background:#5c8a5c;}
+  .gauge-zone.media{width:27%;background:var(--saffron);}
+  .gauge-zone.gruesa{width:35%;background:var(--paprika);}
+  .gauge-marker{
+    position:absolute;top:-4px;left:0;width:4px;height:22px;background:var(--cream);
+    border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.4);transform:translateX(-2px);
+    transition:left .2s ease;
   }
-  .grosor-num{font-family:'Fraunces',serif;font-weight:600;font-size:30px;color:var(--saffron);line-height:1;}
-  .grosor-tag{
-    display:inline-block;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;
-    text-transform:uppercase;letter-spacing:.08em;padding:4px 10px;border-radius:20px;
-    border:1px solid var(--line);color:var(--muted);
+  .gauge-labels{
+    display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:7px;
   }
-  .grosor-tag.fina{border-color:#5c8a5c;color:#8fbf8f;}
-  .grosor-tag.media{border-color:var(--saffron);color:var(--saffron);}
-  .grosor-tag.gruesa{border-color:var(--paprika);color:#e88b62;}
-  @media (max-width:600px){
-    .cross-wrap{flex-direction:column;}
-    .cross-readout{width:auto;flex-direction:row;align-items:center;justify-content:space-between;}
+
+  /* buttons */
+  .btn-start, .btn-primary, .btn-secondary{
+    font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600;letter-spacing:.02em;
+    border-radius:9px;padding:13px 20px;cursor:pointer;border:1px solid var(--line);
+    transition:all .15s ease;
+  }
+  .btn-start, .btn-primary{background:var(--paprika);color:var(--cream);border-color:var(--paprika);}
+  .btn-start:hover, .btn-primary:hover{background:#a83a0c;}
+  .btn-secondary{background:var(--panel);color:var(--muted);}
+  .btn-secondary:hover{color:var(--cream);border-color:var(--saffron);}
+  .btn-secondary:disabled{opacity:0;pointer-events:none;}
+  .btn-link{
+    background:none;border:none;color:var(--saffron);font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;cursor:pointer;text-transform:uppercase;letter-spacing:.06em;padding:0;
+  }
+
+  .wizard-progress{margin-bottom:22px;}
+  .wizard-progress span{
+    font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.08em;
+  }
+  .wizard-bar{height:4px;background:var(--line);border-radius:4px;margin-top:8px;overflow:hidden;}
+  .wizard-bar-fill{height:100%;background:var(--saffron);width:14%;transition:width .2s ease;}
+  .wizard-nav{display:flex;justify-content:space-between;margin-top:26px;gap:12px;}
+  .wizard-nav button{flex:1;}
+
+  /* question field component, shared by wizard (one at a time) and result (all, compact) */
+  .qfield{margin-bottom:18px;padding-bottom:16px;border-bottom:1px solid var(--line);}
+  .qfield:last-child{margin-bottom:0;border-bottom:none;padding-bottom:0;}
+  .qfield-row{display:flex;align-items:center;gap:12px;}
+  .qfield-title{flex:0 0 auto;min-width:150px;font-size:13.5px;color:var(--cream);}
+  .qfield-title .val{display:block;margin-top:2px;}
+  .qfield-control{flex:1;min-width:0;}
+  .qfield-toggle{
+    flex:none;background:none;border:1px solid var(--line);border-radius:6px;width:26px;height:26px;
+    color:var(--muted);cursor:pointer;font-size:11px;line-height:1;transition:transform .15s ease, color .15s ease;
+  }
+  .qfield-toggle:hover{color:var(--cream);border-color:var(--saffron);}
+  .qfield-hint{display:none;font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.5;}
+  .qfield.open .qfield-hint{display:block;}
+  .qfield.open .qfield-toggle{transform:rotate(180deg);}
+  .qfield-extra{margin-top:10px;}
+
+  .mode-wizard .qfield{border-bottom:none;padding-bottom:0;margin-bottom:0;}
+  .mode-wizard .qfield-hint{display:block !important;margin-top:12px;}
+  .mode-wizard .qfield-toggle{display:none;}
+  .mode-wizard .qfield-row{flex-wrap:wrap;}
+  .mode-wizard .qfield-title{
+    font-size:18px;font-family:'Fraunces',serif;font-weight:600;min-width:100%;margin-bottom:10px;color:var(--cream);
+  }
+  .mode-wizard .qfield-title .val{
+    font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--saffron);display:inline;margin-left:8px;
+  }
+
+  .qfield-wide .qfield-row{margin-bottom:4px;}
+
+  @media (max-width:520px){
+    .qfield-row{flex-wrap:wrap;}
+    .qfield-title{min-width:100%;}
   }
 
   footer{margin-top:28px;text-align:center;color:var(--muted);font-size:11.5px;font-family:'IBM Plex Mono',monospace;}
@@ -184,101 +237,42 @@
 <div class="wrap">
 
   <header>
-    <div class="eyebrow">Boceto de cocina · v3 · ya online</div>
+    <div class="eyebrow">Boceto de cocina · v4 · asistente</div>
     <h1>Arroz &amp; caldo, <em>a fuego real</em></h1>
-    <p class="sub">Los comensales son el dato fijo: en base a cuántos seáis se calcula el arroz. La paellera, los aros y la potencia son lo que ya tienes en casa — la app te dice si encajan, y qué caldo echar.</p>
+    <p class="sub">Te hago unas pocas preguntas, una a una. Al final ves y tocas todos los datos juntos, con el caldo exacto que necesitas.</p>
   </header>
 
-  <div class="grid">
+  <!-- START SCREEN -->
+  <div class="card" id="screenStart">
+    <h2>Antes de nada</h2>
+    <p class="sub" style="margin:0 0 20px;">7 preguntas rápidas: ciudad, interior o exterior, comensales, ración, variedad de arroz, nacarado y diámetro de la paellera. Al terminar, potencia y quemadores.</p>
+    <button type="button" class="btn-start" id="btnStart">Empezar cálculo →</button>
+  </div>
 
-    <!-- CONTROLS -->
-    <div class="card">
-      <h2>Paellero</h2>
-
-      <div class="burner-stage" id="stage">
-        <div class="ring" id="ring3" style="width:100%;height:100%;"></div>
-        <div class="flame" id="flame3" style="width:96%;height:96%;"></div>
-        <div class="ring" id="ring2" style="width:66%;height:66%;"></div>
-        <div class="flame" id="flame2" style="width:62%;height:62%;"></div>
-        <div class="ring" id="ring1" style="width:34%;height:34%;"></div>
-        <div class="flame" id="flame1" style="width:30%;height:30%;"></div>
-        <div class="pan-overlay" id="panOverlay">
-          <div class="pan-label" id="panLabel">Ø 0 cm</div>
-        </div>
-      </div>
-
-      <div class="aro-buttons">
-        <div class="aro-btn active" data-aros="1">1 aro</div>
-        <div class="aro-btn" data-aros="2">2 aros</div>
-        <div class="aro-btn active" data-aros="3">3 aros</div>
-      </div>
-      <p class="hint" id="aroHint" style="text-align:center;margin-top:10px;"></p>
-
-      <div class="field" style="margin-top:22px;">
-        <label>Potencia total encendida <span class="val" id="potVal">15 kW</span></label>
-        <input type="range" id="potencia" min="3" max="26" step="0.5" value="15">
-        <p class="hint">Quemadores domésticos de 1 aro rondan 7–11&nbsp;kW; los de 3 aros llegan a 21–24&nbsp;kW en total. Ajusta según la etiqueta de tu paellero o la sensación real de hervor.</p>
-      </div>
-
-      <div class="field">
-        <label>Nacarar el arroz antes del caldo</label>
-        <div class="toggle-row">
-          <button class="active" data-sofrito="1">Sí, lo sofrío</button>
-          <button data-sofrito="0">No, caldo directo</button>
-        </div>
-        <p class="hint">Nacarar (sellar el grano en el sofrito 1–2 min) reduce ligeramente la absorción posterior: se resta al caldo para mantener el grano suelto.</p>
-      </div>
-
-      <div class="field">
-        <label>Dónde cocinas</label>
-        <div class="toggle-row">
-          <button class="active" data-entorno="interior">Interior</button>
-          <button data-entorno="exterior">Exterior</button>
-        </div>
-        <p class="hint">En exterior el viento enfría la paellera y acelera la evaporación: se compensa con algo más de caldo.</p>
-      </div>
-
-      <div class="field" id="tempField" style="display:none;">
-        <label>Temperatura ambiente <span class="val" id="tempVal">20 °C</span></label>
-        <input type="range" id="tempAmbiente" min="0" max="40" step="1" value="20">
-        <p class="hint">Días fríos enfrían más la paellera al aire libre; días calurosos, menos.</p>
-      </div>
-
-      <div class="field">
-        <label>Ciudad <span style="font-weight:400;color:var(--muted);">(altitud → presión atmosférica)</span></label>
-        <select id="ciudad"></select>
-        <div id="altitudManualWrap" style="display:none;margin-top:10px;">
-          <input type="number" id="altitudManual" min="0" max="5000" step="10" value="500" placeholder="Altitud en metros">
-        </div>
-        <p class="hint" id="presionHint"></p>
-      </div>
+  <!-- WIZARD SCREEN -->
+  <div class="card" id="screenWizard" style="display:none;">
+    <div class="wizard-progress">
+      <span id="wizardStepLabel">Paso 1 de 7</span>
+      <div class="wizard-bar"><div class="wizard-bar-fill" id="wizardBarFill"></div></div>
     </div>
 
-    <!-- INPUTS + RESULTS -->
+    <div id="wizardSlot"></div>
+
+    <div class="wizard-nav">
+      <button type="button" id="btnBack" class="btn-secondary">Atrás</button>
+      <button type="button" id="btnNext" class="btn-primary">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- RESULT SCREEN -->
+  <div id="screenResult" style="display:none;">
     <div class="card">
-      <h2>Comensales &amp; paellera</h2>
+      <h2>Tus datos <button type="button" id="btnRestart" class="btn-link">↺ Empezar de nuevo</button></h2>
+      <div id="resultSlot"></div>
+    </div>
 
-      <div class="field">
-        <label>Comensales</label>
-        <div class="comensales-row">
-          <button class="stepper" id="menos">–</button>
-          <input type="number" id="comensales" min="1" max="60" value="6">
-          <button class="stepper" id="mas">+</button>
-        </div>
-        <p class="hint">El dato que no cambia: los que se sientan a la mesa. Todo lo demás se ajusta a esto.</p>
-      </div>
-
-      <div class="field">
-        <label>Arroz por comensal <span class="val" id="racionVal">90 g</span></label>
-        <input type="range" id="racion" min="70" max="100" step="5" value="90">
-      </div>
-
-      <div class="field">
-        <label>Radio de tu paellera <span class="val" id="radioVal">21 cm</span></label>
-        <input type="range" id="radio" min="10" max="60" step="0.5" value="21">
-        <p class="hint">Diámetro: <b id="diamHint">42 cm</b> · base útil de cocción (borde inclinado descontado): <b id="baseHint">34 cm</b> · <span id="capacidadHint"></span></p>
-      </div>
-
+    <div class="card">
+      <h2>Resultado</h2>
       <div class="warning" id="warning"></div>
 
       <div class="result-hero">
@@ -297,11 +291,22 @@
         <div>Ratio caldo:arroz aplicado <b id="ratioOut">–</b></div>
       </div>
 
+      <div class="gauge-wrap">
+        <div class="gauge-track">
+          <div class="gauge-zone fina"></div>
+          <div class="gauge-zone media"></div>
+          <div class="gauge-zone gruesa"></div>
+          <div class="gauge-marker" id="gaugeMarker"></div>
+        </div>
+        <div class="gauge-labels"><span>Fina</span><span>Media</span><span>Gruesa</span></div>
+        <p class="hint" id="gaugeReadout" style="text-align:center;margin-top:10px;"></p>
+      </div>
+
       <details>
         <summary>Cómo se calcula</summary>
         <div class="formula-body">
           <div class="row"><span>Arroz total</span><code>comensales · g/ración</code></div>
-          <div class="row"><span>Área útil</span><code>π · (radio·2 − 8cm)² / 4</code></div>
+          <div class="row"><span>Área útil</span><code>π · (diámetro − 8cm)² / 4</code></div>
           <div class="row"><span>Grosor de capa</span><code>volumen arroz ÷ área útil</code></div>
           <div class="row"><span>Ratio base</span><code>1 : 3 (arroz : caldo, en volumen)</code></div>
           <div class="row"><span>Ajuste nacarado</span><code id="fSofrito">×1.00</code></div>
@@ -310,85 +315,151 @@
           <div class="row"><span>Ajuste grosor de capa</span><code id="fGrosor">×1.00</code></div>
           <div class="row"><span>Ajuste entorno (interior/exterior + temp.)</span><code id="fEntorno">×1.00</code></div>
           <div class="row"><span>Ajuste altitud/presión</span><code id="fAltitud">×1.00</code></div>
+          <div class="row"><span>Ajuste variedad de arroz</span><code id="fVariedad">×1.00</code></div>
           <div class="row"><span>Ratio final</span><code id="fFinal">3.00 : 1</code></div>
           <p style="margin-top:12px;">
-            El arroz sale directo de comensales × g/ración — no depende de la paellera. La paellera decide qué tan gruesa queda esa cantidad repartida (por eso el corte lateral de abajo), y ese grosor realimenta ligeramente el caldo: una capa más gruesa necesita algo más de líquido para hidratarse de forma uniforme, una capa fina algo menos.
-            La base útil de cocción suele ser ~8&nbsp;cm menor que el diámetro de boca por la pared inclinada. Más aros y más potencia reparten más calor y aceleran el hervor, así que se compensa con algo más de caldo. Cocinar en exterior añade pérdida de calor por viento (más marcada cuanto más fría la temperatura ambiente). La altitud de la ciudad elegida baja la presión atmosférica y con ella el punto de ebullición del agua: a menor temperatura de hervor, la cocción es más lenta y conviene algo más de caldo de reserva. Coeficientes orientativos — ajústalos a tu paellero real con un par de pruebas.
+            El arroz sale directo de comensales × g/ración — no depende de la paellera. La paellera decide qué tan gruesa queda esa cantidad repartida, y ese grosor realimenta ligeramente el caldo: una capa más gruesa necesita algo más de líquido para hidratarse de forma uniforme, una capa fina algo menos.
+            La base útil de cocción suele ser ~8&nbsp;cm menor que el diámetro de boca por la pared inclinada. Más aros y más potencia reparten más calor y aceleran el hervor, así que se compensa con algo más de caldo. Cocinar en exterior añade pérdida de calor por viento (más marcada cuanto más fría la temperatura ambiente). La altitud baja la presión atmosférica y con ella el punto de ebullición del agua: cocción más lenta, algo más de caldo de reserva. La variedad de arroz también pesa: unas aguantan más caldo sin pasarse, otras se pasan enseguida. Coeficientes orientativos — ajústalos a tu paellero real con un par de pruebas.
           </p>
         </div>
       </details>
     </div>
   </div>
 
-  <!-- CROSS SECTION -->
-  <div class="card">
-    <h2>Corte lateral de la paellera <span style="font-weight:400;">grosor real de la capa</span></h2>
-    <div class="cross-wrap">
-      <div class="cross-svg-holder">
-        <svg id="crossSvg" viewBox="0 0 560 260" width="100%" style="display:block;">
-          <defs>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#e8a23d" stop-opacity="0.55"/>
-              <stop offset="100%" stop-color="#e8a23d" stop-opacity="0"/>
-            </radialGradient>
-            <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#8b8f92"/>
-              <stop offset="45%" stop-color="#55575a"/>
-              <stop offset="100%" stop-color="#2b2c2e"/>
-            </linearGradient>
-            <linearGradient id="riceGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#f1cf85"/>
-              <stop offset="55%" stop-color="#e0aa54"/>
-              <stop offset="85%" stop-color="#c4813a"/>
-              <stop offset="100%" stop-color="#8a4a1e"/>
-            </linearGradient>
-            <clipPath id="panClip">
-              <path id="panClipPath" d=""/>
-            </clipPath>
-          </defs>
+  <footer>hecho para no quedarte corto de caldo — ni ahogar el socarrat</footer>
+</div>
 
-          <ellipse cx="280" cy="230" rx="150" ry="16" fill="url(#glow)"/>
+<!-- shared question fields: moved between wizard and result via JS, never duplicated -->
+<div id="fieldsHost" class="mode-wizard">
 
-          <!-- outer metal body -->
-          <path id="panOuter" fill="url(#steel)" d=""/>
-          <!-- inner cavity (dark, visible where rice doesn't reach) -->
-          <path id="panInner" fill="#1a1512" d=""/>
-
-          <!-- rice fill, clipped to cavity shape -->
-          <g clip-path="url(#panClip)">
-            <rect id="riceRect" x="0" width="560" fill="url(#riceGrad)" y="260" height="0"/>
-            <g id="garnish"></g>
-          </g>
-
-          <!-- rim highlight -->
-          <path id="panRimHi" fill="none" stroke="#c9ccce" stroke-width="2" stroke-linecap="round" opacity="0.5" d=""/>
-
-          <!-- ruler -->
-          <g id="ruler" font-family="IBM Plex Mono, monospace" font-size="10" fill="#9a8d78"></g>
-        </svg>
-      </div>
-      <div class="cross-readout">
-        <div>
-          <div class="grosor-num" id="grosorNum">0.0 cm</div>
-          <span class="grosor-tag" id="grosorTag">–</span>
-        </div>
-        <p class="hint" id="grosorHint" style="margin-top:0;"></p>
-      </div>
+  <div class="qfield" data-key="ciudad">
+    <div class="qfield-row">
+      <span class="qfield-title">Ciudad</span>
+      <select id="ciudad" class="qfield-control"></select>
+      <button type="button" class="qfield-toggle">⌄</button>
     </div>
+    <div class="qfield-extra" id="altitudManualWrap" style="display:none;">
+      <input type="number" id="altitudManual" min="0" max="5000" step="10" value="500" placeholder="Altitud en metros">
+    </div>
+    <p class="qfield-hint" id="presionHint"></p>
   </div>
 
-  <footer>hecho para no quedarte corto de caldo — ni ahogar el socarrat</footer>
+  <div class="qfield" data-key="entorno">
+    <div class="qfield-row">
+      <span class="qfield-title">Dónde cocinas</span>
+      <div class="toggle-row qfield-control">
+        <button class="active" data-entorno="interior">Interior</button>
+        <button data-entorno="exterior">Exterior</button>
+      </div>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <div class="qfield-extra" id="tempField" style="display:none;">
+      <label style="font-size:12.5px;margin-bottom:6px;">Temperatura ambiente <span class="val" id="tempVal">20 °C</span></label>
+      <input type="range" id="tempAmbiente" min="0" max="40" step="1" value="20">
+    </div>
+    <p class="qfield-hint">En exterior el viento enfría la paellera y acelera la evaporación: se compensa con algo más de caldo. Días fríos enfrían más; días calurosos, menos.</p>
+  </div>
+
+  <div class="qfield" data-key="comensales">
+    <div class="qfield-row">
+      <span class="qfield-title">Comensales</span>
+      <div class="comensales-row qfield-control">
+        <button type="button" class="stepper" id="menos">–</button>
+        <input type="number" id="comensales" min="1" max="60" value="6">
+        <button type="button" class="stepper" id="mas">+</button>
+      </div>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <p class="qfield-hint">El dato que no cambia: los que se sientan a la mesa. Todo lo demás se ajusta a esto.</p>
+  </div>
+
+  <div class="qfield" data-key="racion">
+    <div class="qfield-row">
+      <span class="qfield-title">Arroz por comensal</span>
+      <div class="toggle-row qfield-control">
+        <button class="active" data-racion="100">Plato único · 100 g</button>
+        <button data-racion="80">Con entrantes · 80 g</button>
+      </div>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <p class="qfield-hint">Si la paella es el único plato, calcula 100&nbsp;g de arroz crudo por persona. Si hay entrantes, tapas u otros platos antes o junto a ella, con 80&nbsp;g suele sobrar.</p>
+  </div>
+
+  <div class="qfield" data-key="variedad">
+    <div class="qfield-row">
+      <span class="qfield-title">Variedad de arroz</span>
+      <select id="variedad" class="qfield-control">
+        <option value="bomba">Bomba</option>
+        <option value="albufera">Albufera / J. Sendra</option>
+        <option value="bahia" selected>Bahía</option>
+        <option value="senia">Senia</option>
+        <option value="otro">Otra / no lo sé</option>
+      </select>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <p class="qfield-hint" id="variedadHint"></p>
+  </div>
+
+  <div class="qfield" data-key="nacarado">
+    <div class="qfield-row">
+      <span class="qfield-title">Nacarar el arroz</span>
+      <div class="toggle-row qfield-control">
+        <button class="active" data-sofrito="1">Sí, lo sofrío</button>
+        <button data-sofrito="0">No, caldo directo</button>
+      </div>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <p class="qfield-hint">Nacarar (sellar el grano en el sofrito 1–2 min) reduce ligeramente la absorción posterior: se resta al caldo para mantener el grano suelto.</p>
+  </div>
+
+  <div class="qfield" data-key="diametro">
+    <div class="qfield-row">
+      <span class="qfield-title">Diámetro de la paellera <span class="val" id="diametroVal">42 cm</span></span>
+      <input type="range" id="diametro" class="qfield-control" min="20" max="120" step="1" value="42">
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <p class="qfield-hint" id="diametroHint"></p>
+  </div>
+
+  <div class="qfield qfield-wide" data-key="quemadores">
+    <div class="qfield-row">
+      <span class="qfield-title">Potencia y quemadores</span>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <div class="burner-stage" id="stage">
+      <div class="ring" id="ring3" style="width:100%;height:100%;"></div>
+      <div class="flame" id="flame3" style="width:96%;height:96%;"></div>
+      <div class="ring" id="ring2" style="width:66%;height:66%;"></div>
+      <div class="flame" id="flame2" style="width:62%;height:62%;"></div>
+      <div class="ring" id="ring1" style="width:34%;height:34%;"></div>
+      <div class="flame" id="flame1" style="width:30%;height:30%;"></div>
+      <div class="pan-overlay" id="panOverlay">
+        <div class="pan-label" id="panLabel">Ø 0 cm</div>
+      </div>
+    </div>
+    <div class="aro-buttons">
+      <div class="aro-btn active" data-aros="1">1 aro</div>
+      <div class="aro-btn" data-aros="2">2 aros</div>
+      <div class="aro-btn active" data-aros="3">3 aros</div>
+    </div>
+    <div style="margin-top:18px;">
+      <label>Potencia total encendida <span class="val" id="potVal">15 kW</span></label>
+      <input type="range" id="potencia" min="3" max="26" step="0.5" value="15">
+    </div>
+    <p class="qfield-hint" id="quemadoresHint"></p>
+  </div>
+
 </div>
 
 <script>
 (function(){
   const $ = id => document.getElementById(id);
-  const svgNS = 'http://www.w3.org/2000/svg';
 
   const state = {
     comensales: 6,
-    racionG: 90,
-    radio: 21,
+    racionG: 100,
+    variedad: 'bahia',
+    diametro: 42,
     aros: 3,
     potencia: 15,
     sofrito: true,
@@ -413,6 +484,15 @@
     'Zamora': 656, 'Zaragoza': 199, 'Ceuta': 20, 'Melilla': 60
   };
 
+  const VARIEDAD_FACTOR = { bomba:1.12, albufera:1.03, bahia:1.00, senia:0.90, otro:1.00 };
+  const VARIEDAD_INFO = {
+    bomba: 'Grano muy resistente a pasarse: aguanta más caldo sin quedar empastado. Sube el ratio y da más margen de cocción.',
+    albufera: 'Híbrido pensado para paella (Bomba × Senia): buen punto medio entre resistencia y absorción de sabor.',
+    bahia: 'Variedad muy habitual en paella. Se usa como referencia, sin ajuste sobre el ratio base.',
+    senia: 'Variedad tradicional valenciana, de grano fino: absorbe rápido y se pasa con más facilidad. Se reduce algo el caldo para no pasarte de cocción.',
+    otro: 'Sin datos fiables de esta variedad: se aplica el ratio base — vigila la cocción de cerca y haz una prueba de caldo antes de rectificar.'
+  };
+
   const AROS_RANGO = {
     1: {min:20, max:38, label:'ideal para paelleras de 20–38 cm de diámetro'},
     2: {min:38, max:60, label:'ideal para paelleras de 38–60 cm de diámetro'},
@@ -420,6 +500,7 @@
   };
   const BROTH_ML_PER_100G_BASE = 300; // ~1:3 arroz:caldo en volumen
   const RICE_DENSITY = 0.80; // g/cm3, arroz crudo a granel
+  const GAUGE_SCALE_MAX = 1.3; // cm, tope de escala del medidor gráfico
 
   function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
 
@@ -444,6 +525,8 @@
     return clamp(1.05 + (20 - tempC) * 0.003, 0.95, 1.15);
   }
 
+  function factorVariedad(v){ return VARIEDAD_FACTOR[v] ?? 1.00; }
+
   function getAltitud(){
     return state.ciudad === 'manual' ? state.altitudManual : CIUDADES[state.ciudad];
   }
@@ -466,110 +549,8 @@
     sel.value = state.ciudad;
   }
 
-  // ---- pan cross-section geometry (fixed drawing constants) ----
-  const PAN = {
-    railL: 70, railR: 490,      // rim x positions
-    topY: 55,                   // rim y (top of pan wall)
-    floorY: 210,                // pan floor y (cavity bottom, flat part)
-    floorL: 190, floorR: 370,   // flat floor x-range
-    outerPad: 16,                // metal thickness for outer silhouette
-    pxPerCm: 62,                 // scale for rice fill height
-    maxFillPx: 130                // cavity usable depth in px (~2.1 cm)
-  };
-
-  function cavityPath(){
-    // open-top silhouette of the cooking surface, closed at bottom for fill purposes handled separately
-    return `M ${PAN.railL} ${PAN.topY}
-            L ${PAN.floorL} ${PAN.floorY}
-            Q ${(PAN.floorL+PAN.floorR)/2} ${PAN.floorY+20} ${PAN.floorR} ${PAN.floorY}
-            L ${PAN.railR} ${PAN.topY}
-            L ${PAN.railR} 260 L ${PAN.railL} 260 Z`;
-  }
-
-  function outerPath(){
-    const p = PAN.outerPad;
-    return `M ${PAN.railL-p*1.3} ${PAN.topY-6}
-            L ${PAN.floorL} ${PAN.floorY+p}
-            Q ${(PAN.floorL+PAN.floorR)/2} ${PAN.floorY+20+p} ${PAN.floorR} ${PAN.floorY+p}
-            L ${PAN.railR+p*1.3} ${PAN.topY-6}
-            L ${PAN.railR+p*1.3+18} ${PAN.topY-10}
-            L ${PAN.railL-p*1.3-18} ${PAN.topY-10} Z`;
-  }
-
-  function rimHiPath(){
-    return `M ${PAN.railL-14} ${PAN.topY-6} L ${PAN.railL+2} ${PAN.topY+2}
-            M ${PAN.railR+14} ${PAN.topY-6} L ${PAN.railR-2} ${PAN.topY+2}`;
-  }
-
-  function buildStaticPan(){
-    $('panClipPath').setAttribute('d', cavityPath());
-    $('panOuter').setAttribute('d', outerPath());
-    $('panInner').setAttribute('d', cavityPath());
-    $('panRimHi').setAttribute('d', rimHiPath());
-  }
-
-  function buildRuler(){
-    const g = $('ruler');
-    g.innerHTML = '';
-    const rulerX = PAN.railR + 46;
-    const baseY = PAN.floorY;
-    const marks = [0, 0.25, 0.5, 0.75, 1, 1.25, 1.5];
-    marks.forEach(cm=>{
-      const y = baseY - cm*PAN.pxPerCm;
-      const line = document.createElementNS(svgNS,'line');
-      line.setAttribute('x1', rulerX); line.setAttribute('x2', rulerX+8);
-      line.setAttribute('y1', y); line.setAttribute('y2', y);
-      line.setAttribute('stroke', '#5a4c38'); line.setAttribute('stroke-width', 1.5);
-      g.appendChild(line);
-      const txt = document.createElementNS(svgNS,'text');
-      txt.setAttribute('x', rulerX+13); txt.setAttribute('y', y+3.5);
-      txt.textContent = cm.toFixed(2).replace(/0$/,'').replace(/\.$/,'') + (cm===0?' cm':'');
-      g.appendChild(txt);
-    });
-    const axis = document.createElementNS(svgNS,'line');
-    axis.setAttribute('x1', rulerX); axis.setAttribute('x2', rulerX);
-    axis.setAttribute('y1', baseY); axis.setAttribute('y2', baseY - 1.5*PAN.pxPerCm);
-    axis.setAttribute('stroke', '#5a4c38'); axis.setAttribute('stroke-width', 1.5);
-    g.appendChild(axis);
-  }
-
-  const GARNISH_SPECS = [
-    {x:250, minCm:0.28, type:'pepper', rot:-18},
-    {x:340, minCm:0.42, type:'green', rot:12},
-    {x:295, minCm:0.55, type:'saffron', rot:0},
-    {x:220, minCm:0.7,  type:'green', rot:-8},
-    {x:370, minCm:0.85, type:'pepper', rot:20}
-  ];
-
-  function shapeMarkup(type, cx, cy, rot){
-    const t = `translate(${cx} ${cy}) rotate(${rot})`;
-    if(type==='pepper'){
-      return `<rect transform="${t}" x="-9" y="-3.2" width="18" height="6.4" rx="3.2" fill="#c1440e"/>`;
-    }
-    if(type==='green'){
-      return `<ellipse transform="${t}" cx="0" cy="0" rx="9" ry="3.4" fill="#5c8a3f"/>`;
-    }
-    // saffron threads
-    return `<g transform="${t}">
-      <path d="M -10 0 Q -4 -6 2 0 Q 8 5 12 -2" fill="none" stroke="#d43f1a" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M -6 4 Q 0 -2 6 4" fill="none" stroke="#e8891f" stroke-width="1.4" stroke-linecap="round"/>
-    </g>`;
-  }
-
-  function updateGarnish(fillTopY){
-    const g = $('garnish');
-    let html = '';
-    GARNISH_SPECS.forEach(spec=>{
-      const surfaceY = PAN.floorY - spec.minCm*PAN.pxPerCm;
-      if (fillTopY <= surfaceY + 4){
-        html += shapeMarkup(spec.type, spec.x, Math.max(fillTopY+6, surfaceY - 6), spec.rot);
-      }
-    });
-    g.innerHTML = html;
-  }
-
   function render(){
-    const diametro = state.radio * 2;
+    const diametro = state.diametro;
     const baseUtil = Math.max(diametro - 8, diametro * 0.6);
     const areaEfectiva = Math.PI * (baseUtil/2) * (baseUtil/2);
 
@@ -585,7 +566,8 @@
     const altura = getAltitud();
     const { presionHpa, ebullicionC } = presionYEbullicion(altura);
     const fAltitud = factorAltitud(ebullicionC);
-    const ratioFinal = (BROTH_ML_PER_100G_BASE/100) * fSofrito * fAros * fPot * fGrosor * fEntorno * fAltitud;
+    const fVariedad = factorVariedad(state.variedad);
+    const ratioFinal = (BROTH_ML_PER_100G_BASE/100) * fSofrito * fAros * fPot * fGrosor * fEntorno * fAltitud * fVariedad;
 
     const caldoL = (arrozG * ratioFinal) / 1000;
 
@@ -593,12 +575,9 @@
     const comensalesRecomendados = Math.round((areaEfectiva * RICE_DENSITY * 0.6) / state.racionG);
 
     // ---- text outputs ----
-    $('radioVal').textContent = state.radio.toFixed(1) + ' cm';
-    $('diamHint').textContent = diametro.toFixed(0) + ' cm';
-    $('baseHint').textContent = baseUtil.toFixed(0) + ' cm';
-    $('racionVal').textContent = state.racionG + ' g';
+    $('diametroVal').textContent = diametro.toFixed(0) + ' cm';
+    $('diametroHint').textContent = `Base útil de cocción (borde inclinado descontado): ${baseUtil.toFixed(0)} cm · admite ~${comensalesRecomendados} comensales a capa media.`;
     $('potVal').textContent = state.potencia.toFixed(1) + ' kW';
-    $('capacidadHint').textContent = `admite ~${comensalesRecomendados} comensales a capa media`;
 
     $('arrozOut').innerHTML = Math.round(arrozG) + '<span> g</span>';
     $('caldoOut').innerHTML = caldoL.toFixed(2) + '<span> L</span>';
@@ -611,40 +590,36 @@
     $('fGrosor').textContent = '×' + fGrosor.toFixed(2);
     $('fEntorno').textContent = '×' + fEntorno.toFixed(2);
     $('fAltitud').textContent = '×' + fAltitud.toFixed(2);
+    $('fVariedad').textContent = '×' + fVariedad.toFixed(2);
     $('fFinal').textContent = '1 : ' + ratioFinal.toFixed(2);
 
     $('tempVal').textContent = state.tempAmbiente + ' °C';
-    $('presionHint').textContent = `Altitud: ${altura.toFixed(0)} m · presión estimada ${presionHpa.toFixed(0)} hPa · agua hierve a ~${ebullicionC.toFixed(1)} °C (estimación orientativa)`;
+    $('presionHint').textContent = `Altitud: ${altura.toFixed(0)} m · presión estimada ${presionHpa.toFixed(0)} hPa · agua hierve a ~${ebullicionC.toFixed(1)} °C (estimación orientativa).`;
+    $('variedadHint').textContent = VARIEDAD_INFO[state.variedad];
 
-    // ---- cross-section fill ----
-    const fillPx = clamp(grosorCm * PAN.pxPerCm, 2, PAN.maxFillPx);
-    const fillTopY = PAN.floorY - fillPx;
-    const rect = $('riceRect');
-    rect.setAttribute('y', fillTopY);
-    rect.setAttribute('height', 260 - fillTopY);
-    updateGarnish(fillTopY);
+    const rango = AROS_RANGO[state.aros];
+    $('quemadoresHint').textContent = `${rango.label}. Quemadores domésticos de 1 aro rondan 7–11 kW; los de 3 aros llegan a 21–24 kW en total. Ajusta según la etiqueta de tu paellero o la sensación real de hervor.`;
 
-    $('grosorNum').textContent = grosorCm.toFixed(2) + ' cm';
-    let tag = 'fina', tagClass='fina', tagHint='Capa fina: cocción muy pareja, algo de margen en la paellera.';
-    if (grosorCm > 0.85){ tag='gruesa'; tagClass='gruesa'; tagHint='Capa gruesa: riesgo de que el centro quede con más caldo del debido mientras los bordes se pasan.'; }
-    else if (grosorCm > 0.5){ tag='media'; tagClass='media'; tagHint='Capa media: el punto habitual en casa, buen equilibrio.'; }
-    const tagEl = $('grosorTag');
-    tagEl.textContent = tag;
-    tagEl.className = 'grosor-tag ' + tagClass;
-    $('grosorHint').textContent = tagHint;
+    // ---- thickness gauge (graphic, no realism) ----
+    let tagHint = 'Capa fina: cocción muy pareja, algo de margen en la paellera.';
+    if (grosorCm > 0.85){ tagHint = 'Capa gruesa: riesgo de que el centro quede con más caldo del debido mientras los bordes se pasan.'; }
+    else if (grosorCm > 0.5){ tagHint = 'Capa media: el punto habitual en casa, buen equilibrio.'; }
+    $('gaugeMarker').style.left = (clamp(grosorCm / GAUGE_SCALE_MAX, 0, 1) * 100) + '%';
+    $('gaugeReadout').innerHTML = `<b>${grosorCm.toFixed(2)}&nbsp;cm</b> — ${tagHint}`;
 
-    // pan overlay sizing (burner card)
+    // pan overlay sizing (burner visual)
     const stage = $('stage');
     const stageSize = stage.clientWidth;
-    const maxPanCm = 100;
-    const pxPerCm = (stageSize * 0.94) / maxPanCm;
-    let panPx = clamp(diametro * pxPerCm, stageSize*0.14, stageSize*0.98);
-    $('panOverlay').style.width = panPx + 'px';
-    $('panOverlay').style.height = panPx + 'px';
+    if (stageSize > 0){
+      const maxPanCm = 100;
+      const pxPerCm = (stageSize * 0.94) / maxPanCm;
+      let panPx = clamp(diametro * pxPerCm, stageSize*0.14, stageSize*0.98);
+      $('panOverlay').style.width = panPx + 'px';
+      $('panOverlay').style.height = panPx + 'px';
+    }
     $('panLabel').textContent = 'Ø ' + diametro.toFixed(0) + ' cm';
 
     // warnings
-    const rango = AROS_RANGO[state.aros];
     const warnEl = $('warning');
     let msgs = [];
     if (diametro < rango.min || diametro > rango.max) {
@@ -657,14 +632,12 @@
     }
     if (msgs.length){ warnEl.classList.add('show'); warnEl.innerHTML = msgs.join('<br><br>'); }
     else { warnEl.classList.remove('show'); }
-
-    $('aroHint').textContent = rango.label;
   }
 
   // ---- listeners ----
-  $('radio').addEventListener('input', e => { state.radio = parseFloat(e.target.value); render(); });
-  $('racion').addEventListener('input', e => { state.racionG = parseFloat(e.target.value); render(); });
+  $('diametro').addEventListener('input', e => { state.diametro = parseFloat(e.target.value); render(); });
   $('potencia').addEventListener('input', e => { state.potencia = parseFloat(e.target.value); render(); });
+  $('variedad').addEventListener('change', e => { state.variedad = e.target.value; render(); });
 
   function setComensales(v){
     v = clamp(Math.round(v), 1, 60);
@@ -675,6 +648,15 @@
   $('comensales').addEventListener('input', e => setComensales(parseInt(e.target.value)||1));
   $('menos').addEventListener('click', ()=> setComensales(state.comensales-1));
   $('mas').addEventListener('click', ()=> setComensales(state.comensales+1));
+
+  document.querySelectorAll('[data-racion]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.racionG = parseInt(btn.dataset.racion);
+      document.querySelectorAll('[data-racion]').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    });
+  });
 
   document.querySelectorAll('.aro-btn').forEach(btn=>{
     btn.addEventListener('click', ()=>{
@@ -721,13 +703,65 @@
     render();
   });
 
+  document.querySelectorAll('.qfield-toggle').forEach(btn=>{
+    btn.addEventListener('click', ()=> btn.closest('.qfield').classList.toggle('open'));
+  });
+
   window.addEventListener('resize', render);
 
   ['ring1','ring2','ring3'].forEach(id=> $(id).classList.add('on'));
   ['flame1','flame2','flame3'].forEach(id=> $(id).classList.add('on'));
 
-  buildStaticPan();
-  buildRuler();
+  // ---- screens: start / wizard (one question at a time) / result (all, compact) ----
+  const STEP_ORDER = ['ciudad','entorno','comensales','racion','variedad','nacarado','diametro'];
+  let screen = 'start';
+  let stepIndex = 0;
+
+  function renderWizardStep(){
+    const key = STEP_ORDER[stepIndex];
+    document.querySelectorAll('#fieldsHost .qfield').forEach(q=>{
+      q.style.display = (q.dataset.key === key) ? 'block' : 'none';
+    });
+    $('wizardStepLabel').textContent = `Paso ${stepIndex+1} de ${STEP_ORDER.length}`;
+    $('wizardBarFill').style.width = ((stepIndex+1)/STEP_ORDER.length*100) + '%';
+    $('btnBack').disabled = stepIndex === 0;
+    $('btnNext').textContent = stepIndex === STEP_ORDER.length-1 ? 'Ver resultado' : 'Siguiente';
+  }
+
+  function showScreen(next){
+    screen = next;
+    $('screenStart').style.display = screen==='start' ? 'block' : 'none';
+    $('screenWizard').style.display = screen==='wizard' ? 'block' : 'none';
+    $('screenResult').style.display = screen==='result' ? 'block' : 'none';
+
+    const fieldsHost = $('fieldsHost');
+    if (screen === 'wizard'){
+      fieldsHost.className = 'mode-wizard';
+      $('wizardSlot').appendChild(fieldsHost);
+      renderWizardStep();
+    } else if (screen === 'result'){
+      fieldsHost.className = 'mode-result';
+      $('resultSlot').appendChild(fieldsHost);
+      document.querySelectorAll('#fieldsHost .qfield').forEach(q=>{
+        q.style.display = 'block';
+        q.classList.remove('open');
+      });
+    }
+    render();
+  }
+
+  $('btnStart').addEventListener('click', ()=>{ stepIndex = 0; showScreen('wizard'); });
+  $('btnRestart').addEventListener('click', ()=>{ stepIndex = 0; showScreen('wizard'); });
+  $('btnNext').addEventListener('click', ()=>{
+    if (stepIndex < STEP_ORDER.length-1){ stepIndex++; renderWizardStep(); }
+    else { showScreen('result'); }
+  });
+  $('btnBack').addEventListener('click', ()=>{
+    if (stepIndex > 0){ stepIndex--; renderWizardStep(); }
+  });
+
+  $('wizardSlot').appendChild($('fieldsHost'));
+
   poblarCiudades();
   render();
 })();
