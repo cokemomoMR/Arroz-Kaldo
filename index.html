@@ -245,14 +245,14 @@
   <!-- START SCREEN -->
   <div class="card" id="screenStart">
     <h2>Antes de nada</h2>
-    <p class="sub" style="margin:0 0 20px;">7 preguntas rápidas: ciudad, interior o exterior, comensales, ración, variedad de arroz, nacarado y diámetro de la paellera. Al terminar, potencia y quemadores.</p>
+    <p class="sub" style="margin:0 0 20px;">8 preguntas rápidas: ciudad, interior o exterior, comensales, ración, variedad de arroz, ingredientes principales, nacarado y diámetro de la paellera. Al terminar, potencia y quemadores.</p>
     <button type="button" class="btn-start" id="btnStart">Empezar cálculo →</button>
   </div>
 
   <!-- WIZARD SCREEN -->
   <div class="card" id="screenWizard" style="display:none;">
     <div class="wizard-progress">
-      <span id="wizardStepLabel">Paso 1 de 7</span>
+      <span id="wizardStepLabel">Paso 1 de 8</span>
       <div class="wizard-bar"><div class="wizard-bar-fill" id="wizardBarFill"></div></div>
     </div>
 
@@ -316,10 +316,11 @@
           <div class="row"><span>Ajuste entorno (interior/exterior + temp.)</span><code id="fEntorno">×1.00</code></div>
           <div class="row"><span>Ajuste altitud/presión</span><code id="fAltitud">×1.00</code></div>
           <div class="row"><span>Ajuste variedad de arroz</span><code id="fVariedad">×1.00</code></div>
+          <div class="row"><span>Ajuste ingredientes principales</span><code id="fIngredientes">×1.00</code></div>
           <div class="row"><span>Ratio final</span><code id="fFinal">3.00 : 1</code></div>
           <p style="margin-top:12px;">
             El arroz sale directo de comensales × g/ración — no depende de la paellera. La paellera decide qué tan gruesa queda esa cantidad repartida, y ese grosor realimenta ligeramente el caldo: una capa más gruesa necesita algo más de líquido para hidratarse de forma uniforme, una capa fina algo menos.
-            La base útil de cocción suele ser ~8&nbsp;cm menor que el diámetro de boca por la pared inclinada. Más aros y más potencia reparten más calor y aceleran el hervor, así que se compensa con algo más de caldo. Cocinar en exterior añade pérdida de calor por viento (más marcada cuanto más fría la temperatura ambiente). La altitud baja la presión atmosférica y con ella el punto de ebullición del agua: cocción más lenta, algo más de caldo de reserva. La variedad de arroz también pesa: unas aguantan más caldo sin pasarse, otras se pasan enseguida. Coeficientes orientativos — ajústalos a tu paellero real con un par de pruebas.
+            La base útil de cocción suele ser ~8&nbsp;cm menor que el diámetro de boca por la pared inclinada. Más aros y más potencia reparten más calor y aceleran el hervor, así que se compensa con algo más de caldo. Cocinar en exterior añade pérdida de calor por viento (más marcada cuanto más fría la temperatura ambiente). La altitud baja la presión atmosférica y con ella el punto de ebullición del agua: cocción más lenta, algo más de caldo de reserva. La variedad de arroz también pesa: unas aguantan más caldo sin pasarse, otras se pasan enseguida. Los ingredientes principales también influyen: la verdura (judía verde, garrofón) suelta agua al cocinarse y reduce el caldo que hace falta añadir; el marisco o la carne sola apenas aportan ese extra. Coeficientes orientativos — ajústalos a tu paellero real con un par de pruebas.
           </p>
         </div>
       </details>
@@ -400,6 +401,21 @@
     <p class="qfield-hint" id="variedadHint"></p>
   </div>
 
+  <div class="qfield" data-key="ingredientes">
+    <div class="qfield-row">
+      <span class="qfield-title">Ingredientes principales</span>
+      <select id="ingredientes" class="qfield-control">
+        <option value="valenciana" selected>Valenciana (pollo/conejo + verdura)</option>
+        <option value="marisco">Marisco</option>
+        <option value="mixta">Mixta (carne + marisco)</option>
+        <option value="carne">Carne, casi sin verdura</option>
+        <option value="verduras">Verduras / vegetariana</option>
+      </select>
+      <button type="button" class="qfield-toggle">⌄</button>
+    </div>
+    <p class="qfield-hint" id="ingredientesHint"></p>
+  </div>
+
   <div class="qfield" data-key="nacarado">
     <div class="qfield-row">
       <span class="qfield-title">Nacarar el arroz</span>
@@ -459,6 +475,7 @@
     comensales: 6,
     racionG: 100,
     variedad: 'bahia',
+    ingredientes: 'valenciana',
     diametro: 42,
     aros: 3,
     potencia: 15,
@@ -491,6 +508,15 @@
     bahia: 'Variedad muy habitual en paella. Se usa como referencia, sin ajuste sobre el ratio base.',
     senia: 'Variedad tradicional valenciana, de grano fino: absorbe rápido y se pasa con más facilidad. Se reduce algo el caldo para no pasarte de cocción.',
     otro: 'Sin datos fiables de esta variedad: se aplica el ratio base — vigila la cocción de cerca y haz una prueba de caldo antes de rectificar.'
+  };
+
+  const INGREDIENTES_FACTOR = { marisco:1.00, carne:1.00, valenciana:0.95, mixta:0.97, verduras:0.90 };
+  const INGREDIENTES_INFO = {
+    marisco: 'El marisco aporta poco agua libre a la cocción: se mantiene el ratio base.',
+    carne: 'Pollo/conejo sin apenas verdura: comportamiento similar al ratio base.',
+    valenciana: 'Judía verde y garrofón sueltan agua al cocinarse: se reduce algo el caldo añadido.',
+    mixta: 'Carne, marisco y verdura combinados: ajuste intermedio.',
+    verduras: 'Mucha verdura (judía verde, garrofón, alcachofa...): suelta bastante agua, se reduce más el caldo.'
   };
 
   const AROS_RANGO = {
@@ -526,6 +552,8 @@
   }
 
   function factorVariedad(v){ return VARIEDAD_FACTOR[v] ?? 1.00; }
+
+  function factorIngredientes(v){ return INGREDIENTES_FACTOR[v] ?? 1.00; }
 
   function getAltitud(){
     return state.ciudad === 'manual' ? state.altitudManual : CIUDADES[state.ciudad];
@@ -567,7 +595,8 @@
     const { presionHpa, ebullicionC } = presionYEbullicion(altura);
     const fAltitud = factorAltitud(ebullicionC);
     const fVariedad = factorVariedad(state.variedad);
-    const ratioFinal = (BROTH_ML_PER_100G_BASE/100) * fSofrito * fAros * fPot * fGrosor * fEntorno * fAltitud * fVariedad;
+    const fIngredientes = factorIngredientes(state.ingredientes);
+    const ratioFinal = (BROTH_ML_PER_100G_BASE/100) * fSofrito * fAros * fPot * fGrosor * fEntorno * fAltitud * fVariedad * fIngredientes;
 
     const caldoL = (arrozG * ratioFinal) / 1000;
 
@@ -591,11 +620,13 @@
     $('fEntorno').textContent = '×' + fEntorno.toFixed(2);
     $('fAltitud').textContent = '×' + fAltitud.toFixed(2);
     $('fVariedad').textContent = '×' + fVariedad.toFixed(2);
+    $('fIngredientes').textContent = '×' + fIngredientes.toFixed(2);
     $('fFinal').textContent = '1 : ' + ratioFinal.toFixed(2);
 
     $('tempVal').textContent = state.tempAmbiente + ' °C';
     $('presionHint').textContent = `Altitud: ${altura.toFixed(0)} m · presión estimada ${presionHpa.toFixed(0)} hPa · agua hierve a ~${ebullicionC.toFixed(1)} °C (estimación orientativa).`;
     $('variedadHint').textContent = VARIEDAD_INFO[state.variedad];
+    $('ingredientesHint').textContent = INGREDIENTES_INFO[state.ingredientes];
 
     const rango = AROS_RANGO[state.aros];
     $('quemadoresHint').textContent = `${rango.label}. Quemadores domésticos de 1 aro rondan 7–11 kW; los de 3 aros llegan a 21–24 kW en total. Ajusta según la etiqueta de tu paellero o la sensación real de hervor.`;
@@ -638,6 +669,7 @@
   $('diametro').addEventListener('input', e => { state.diametro = parseFloat(e.target.value); render(); });
   $('potencia').addEventListener('input', e => { state.potencia = parseFloat(e.target.value); render(); });
   $('variedad').addEventListener('change', e => { state.variedad = e.target.value; render(); });
+  $('ingredientes').addEventListener('change', e => { state.ingredientes = e.target.value; render(); });
 
   function setComensales(v){
     v = clamp(Math.round(v), 1, 60);
@@ -713,7 +745,7 @@
   ['flame1','flame2','flame3'].forEach(id=> $(id).classList.add('on'));
 
   // ---- screens: start / wizard (one question at a time) / result (all, compact) ----
-  const STEP_ORDER = ['ciudad','entorno','comensales','racion','variedad','nacarado','diametro'];
+  const STEP_ORDER = ['ciudad','entorno','comensales','racion','variedad','ingredientes','nacarado','diametro'];
   let screen = 'start';
   let stepIndex = 0;
 
